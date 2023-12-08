@@ -3,10 +3,12 @@ export type INote = {
     text: string
     updatedAt?: string
     user?: string
-    _id: string
+    _id?: string
+    tagsArray?: string[]
 }
 
 export type INoteProps = {
-    item: INote
-    arr: string[]
+    item: INote,
+    index: number
+    onAddTag: (e: string) => void
 }

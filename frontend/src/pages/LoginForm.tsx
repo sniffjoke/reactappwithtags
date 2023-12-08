@@ -15,34 +15,6 @@ const LoginForm = () => {
 
     return (
         <>
-            {/*<div>*/}
-            {/*    <input*/}
-            {/*        onChange={e => onChangeName(e)}*/}
-            {/*        value={name}*/}
-            {/*        type={"text"}*/}
-            {/*        placeholder={'Name'}*/}
-            {/*    />*/}
-            {/*    <input*/}
-            {/*        onChange={(e) => setEmail(e.target.value)}*/}
-            {/*        value={email}*/}
-            {/*        type={"text"}*/}
-            {/*        placeholder={'Email'}*/}
-            {/*    />*/}
-            {/*    <input*/}
-            {/*        onChange={(e) => setPassword(e.target.value)}*/}
-            {/*        value={password}*/}
-            {/*        type={"password"}*/}
-            {/*        placeholder={'Password'}*/}
-            {/*    />*/}
-            {/*    <button onClick={() => store.login(email, password)}>Логин</button>*/}
-            {/*    <button onClick={() => store.registration(name, email, password)}>Регистрация</button>*/}
-            {/*</div>*/}
-            {/*<div>*/}
-            {/*    {tagArr && tagArr.map(item =>*/}
-            {/*        <span style={{backgroundColor: '#00ff00'}}>{item}<span style={{backgroundColor: "white"}}>&nbsp;</span></span>*/}
-            {/*    )}*/}
-            {/*</div>*/}
-
             <section className={'flex justify-center'}>
                 <div className={'pt-10'}>
                     <h1 className={'flex justify-center text-3xl font-serif  text-indigo-600'}>
@@ -54,7 +26,6 @@ const LoginForm = () => {
                 </div>
 
             </section>
-
             <section>
                 <form className="max-w-sm mx-auto" onSubmit={onFormSubmit}>
                     <div className="mb-5">

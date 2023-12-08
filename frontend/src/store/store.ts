@@ -1,6 +1,7 @@
 import {IUser} from "../models/IUser";
 import {makeAutoObservable} from 'mobx'
 import AuthService from "../services/AuthService";
+import UserService from "../services/UserService";
 // import axios from "axios";
 // import {AuthResponse} from "../models/response/AuthResponse";
 // import {API_URL} from "../interceptors";
@@ -54,6 +55,14 @@ export default class Store {
             this.setAuth(false)
             this.setUser({} as IUser)
         } catch (e:any) {
+            console.log(e.response?.data?.message)
+        }
+    }
+
+    async addNote(text: string, tagsArray: string[]) {
+        try {
+            await UserService.addNote(text, tagsArray)
+        } catch (e: any) {
             console.log(e.response?.data?.message)
         }
     }
