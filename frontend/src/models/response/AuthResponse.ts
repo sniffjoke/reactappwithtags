@@ -1,6 +1,11 @@
 import {IUser} from "../IUser";
 
+type tokensResponse = {
+    accessToken: string
+    refreshToken?: string
+}
+
 export interface AuthResponse {
-    token: string
+    tokens: tokensResponse
     user: IUser
 }

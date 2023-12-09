@@ -9,6 +9,6 @@ export default class UserService {
     }
 
     static async addNote(text: string, tagsArray: string[]) {
-        return $api.post('/goals', {text, tagsArray})
+        return $api.post('/notes', {text, tagsArray})
     }
 }

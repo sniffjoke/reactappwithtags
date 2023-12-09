@@ -6,6 +6,7 @@ import axios from "axios";
 import NoteItem from "../components/NoteItem";
 import {INote} from "../models/note/INote";
 import MultiSelect from "../components/MultiSelect";
+import {observer} from "mobx-react-lite";
 
 
 const Dashboard: FC = () => {
@@ -22,17 +23,18 @@ const Dashboard: FC = () => {
     //Selected tags with mouse button
     const [selectedItems, setSelectedItems] = useState<string[]>([])
 
-    // useEffect(() => {
-    //     if (localStorage.getItem('token')) {
-    //         store.checkAuth()
-    //     } else {
-    //         navigate('/login')
-    //     }
-    // }, [])
+    useEffect(() => {
+        if (localStorage.getItem('accessToken')) {
+            store.checkAuth()
+        } else {
+            navigate('/login')
+        }
+    }, [])
+    console.log(store.isAuth)
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios.get('http://localhost:5000/api/goals')
+            const response = await axios.get('http://localhost:5000/api/notes')
             if (!activeSearch) {
                 return setNotes(response.data);
             } else {
@@ -175,10 +177,11 @@ const Dashboard: FC = () => {
                 />
                 <div className={'flex justify-center'}>
                     <div
-                        className="text-black bg-indigo-500 font-medium rounded-lg text-sm w-full w-[200px] px-5 py-2.5 text-center
-                    hover:bg-indigo-700
-                    focus:ring-4 focus:outline-none focus:ring-blue-300
-                    dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-blue-800"
+                        className="text-black bg-indigo-500 font-medium rounded-lg
+                        text-sm w-full w-[200px] px-5 py-2.5 text-center cursor-pointer
+                        hover:bg-indigo-700
+                        focus:ring-4 focus:outline-none focus:ring-blue-300
+                        dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-blue-800"
                         onClick={() => searchItems(selectedItems)}
                     >
                         Применить фильтр(ы)
@@ -201,4 +204,4 @@ const Dashboard: FC = () => {
     );
 };
 
-export default Dashboard;
+export default observer(Dashboard);

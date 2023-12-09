@@ -1,12 +1,23 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {FaSignInAlt} from "react-icons/fa";
 import {Context} from "../index";
+import {observer} from "mobx-react-lite";
+import {useNavigate} from "react-router-dom";
 
 const LoginForm = () => {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const navigate = useNavigate()
 
     const {store} = useContext(Context)
+
+    useEffect(() => {
+        if (localStorage.getItem('accessToken')) {
+            store.checkAuth()
+            navigate('/')
+        }
+
+    }, [store.isAuth])
 
     const onFormSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault()
@@ -77,4 +88,4 @@ const LoginForm = () => {
     );
 };
 
-export default LoginForm;
+export default observer(LoginForm);

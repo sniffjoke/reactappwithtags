@@ -1,5 +1,5 @@
 import $api from "../interceptors";
-import {AxiosResponse} from 'axios'
+import axios, {AxiosResponse} from 'axios'
 import {AuthResponse} from "../models/response/AuthResponse";
 
 export default class AuthService {
@@ -10,6 +10,6 @@ export default class AuthService {
         return $api.post<AuthResponse>('/users/registration', {name, email, password})
     }
     static async logout(): Promise<void> {
-        return $api.post('/logout')
+        return $api.post('users/logout')
     }
 }
