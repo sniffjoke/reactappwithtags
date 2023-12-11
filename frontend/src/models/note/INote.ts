@@ -11,4 +11,9 @@ export type INoteProps = {
     item: INote,
     index: number
     onAddTag: (e: string) => void
+    onEditPanel: () => void
+    onEditIndex: (i: number) => void
+    notes: INote[]
+    setNotes: (notes: INote[]) => void
+    onRemoveNote: (id: string) => void
 }

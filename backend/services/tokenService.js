@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken')
 const tokenModel = require('../models/tokenModel')
 const User = require('../models/authModel')
-const UserDto = require("../dtos/userDto");
 
 const generateTokens = (id) => {
     const accessToken = jwt.sign({id}, process.env.JWT_KEY, {
-        expiresIn: '15s'
+        expiresIn: '3000s'
     })
     const refreshToken = jwt.sign({id}, process.env.JWT_KEY_REFRESH, {
         expiresIn: '30d'
@@ -16,14 +15,16 @@ const generateTokens = (id) => {
     }
 }
 
-const validateAccessToken = (token) => {
-    try {
-        const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
-        return userData
-    } catch (e) {
-        return null
-    }
+const refreshAccessToken = (id) => {
+    const accessToken = jwt.sign({id}, process.env.JWT_KEY, {
+        expiresIn: '30000s'
+    })
+    const refreshToken = jwt.sign({id}, process.env.JWT_KEY_REFRESH, {
+        expiresIn: '30d'
+    })
+    return accessToken
 }
+
 
 const saveToken = async (userId, refreshToken) => {
     const tokenData = await tokenModel.findOne({user: userId})
@@ -47,23 +48,23 @@ const findToken = async (refreshToken) => {
 }
 
 const refreshTokenHandler = async (refreshToken) => {
-    if (!refreshToken) {
-        console.log('Нет токена')
-    }
-    const userData = jwt.verify(refreshToken, process.env.JWT_KEY_REFRESH)
-    const tokenFromDb = await findToken(refreshToken)
-    if (!userData || !tokenFromDb) {
-        throw new Error('Залогиньтесь еще раз')
-    }
-    const user = await User.findById(userData.id)
-    const tokens = generateTokens(user.id)
+    try {
+        const userData = jwt.verify(refreshToken, process.env.JWT_KEY_REFRESH)
+        const tokenFromDb = await findToken(refreshToken)
+        if (!userData || !tokenFromDb) {
+            throw new Error('Залогиньтесь еще раз')
+        }
+        const user = await User.findById(userData.id)
+        const token = refreshAccessToken(user.id)
 
-    await saveToken(user.id, tokens.refreshToken)
-
-    return {
-        _id: user.id,
-        ...tokens
+        return {
+            _id: user.id,
+            token
+        }
+    } catch (e) {
+        throw new Error('Авторизуйтесь')
     }
+
 }
 
 

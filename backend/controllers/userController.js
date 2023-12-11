@@ -1,8 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const User = require('../models/authModel')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const {generateTokens, saveToken, removeToken, refreshToken, refreshTokenHandler} = require("../services/tokenService");
+const {generateTokens, saveToken, removeToken, refreshTokenHandler} = require("../services/tokenService");
 
 const registerUser = asyncHandler(async (req, res) => {
     const {name, email, password} = req.body
@@ -82,19 +81,16 @@ const refreshTokenUser = asyncHandler (
     async (req, res) => {
         const {refreshToken} = req.cookies
         const userData = await refreshTokenHandler(refreshToken)
-        res.cookie('refreshToken', userData.refreshToken, {maxAge: 30*24*60*60*1000, httpOnly: true, secure: false})
         return res.json(userData)
     }
 )
 
-const logout = asyncHandler(
-    async (req, res) => {
+const logout = async (req, res) => {
         const {refreshToken} = req.cookies
         const token = await removeToken(refreshToken)
-        await res.clearCookie()
+        await res.clearCookie('refreshToken')
         return res.json(token)
     }
-)
 
 const getMe = asyncHandler(async (req, res) => {
     res.json(req.user)

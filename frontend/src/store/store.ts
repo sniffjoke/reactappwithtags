@@ -4,13 +4,13 @@ import AuthService from "../services/AuthService";
 import UserService from "../services/UserService";
 import {API_URL} from "../interceptors";
 import axios from "axios";
-import {AuthResponse} from "../models/response/AuthResponse";
-// import axios from "axios";
-// import {AuthResponse} from "../models/response/AuthResponse";
-// import {API_URL} from "../interceptors";
+import {INote} from "../models/note/INote";
 
 export default class Store {
     user = {} as IUser
+
+    notes = [] as INote[]
+
     isAuth = false
     isLoading = false
     constructor() {
@@ -32,24 +32,22 @@ export default class Store {
     async registration(name: string, email: string, password: string) {
         try {
             const response = await AuthService.registration(name, email, password)
-            console.log(response)
             localStorage.setItem('accessToken', response.data.tokens.accessToken)
             this.setAuth(true)
             this.setUser(response.data.user)
         } catch (e:any) {
-            console.log(e.response?.data?.message)
+            throw new Error('Неправильные данные, возможно данный email уже используется другим пользователем')
         }
     }
 
     async login(email: string, password: string) {
         try {
             const response = await AuthService.login(email, password)
-            console.log(response)
             localStorage.setItem('accessToken', response.data.tokens.accessToken)
             this.setAuth(true)
             this.setUser(response.data.user)
         } catch (e:any) {
-            console.log(e.response?.data?.message)
+            throw new Error('Неправильные данные')
         }
     }
 
@@ -64,25 +62,49 @@ export default class Store {
         }
     }
 
-    async addNote(text: string, tagsArray: string[]) {
+
+    async addNote(note: INote) {
         try {
-            await UserService.addNote(text, tagsArray)
+            await UserService.addNote(note)
+            this.notes.push(note)
         } catch (e: any) {
             console.log(e.response?.data?.message)
         }
     }
+
+    async updateNote(id:string, note: INote) {
+        try {
+            await UserService.updateNote(id, note)
+        } catch (e: any) {
+            console.log(e.response?.data?.message)
+        }
+    }
+
+    async deleteNote(id: string) {
+        try {
+            await UserService.deleteNote(id)
+        } catch (e: any) {
+            console.log(e.response?.data?.message)
+        }
+    }
+
     async checkAuth() {
         this.setLoading(true)
         try {
             const response = await axios.get(`${API_URL}/users/refresh`, {withCredentials: true})
-            console.log(response)
-            localStorage.setItem('accessToken', response.data.accessToken)
+            if (response.data.token !== undefined) {
+                localStorage.setItem('accessToken', response.data.token)
             this.setAuth(true)
             this.setUser(response.data.user)
+            } else {
+                throw new Error('Пожалуйста авторизуйтесь')
+            }
         } catch (e:any) {
-            console.log(e)
+            throw new Error('Пожалуйста авторизуйтесь')
         } finally {
             this.setLoading(false)
         }
     }
+
+
 }

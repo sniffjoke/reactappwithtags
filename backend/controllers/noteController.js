@@ -2,11 +2,9 @@ const asyncHandler = require('express-async-handler')
 const Note = require('./../models/noteModel')
 
 const getNotes = asyncHandler(async (req, res) => {
-    // const notes = await Note.find({user: req.user.id})
-    const note = await Note.find()
+    const notes = await Note.find({user: req.user.id})
 
-
-    res.status(200).json(note)
+    res.status(200).json(notes)
 })
 
 const setNote = asyncHandler(async (req, res) => {
@@ -17,7 +15,7 @@ const setNote = asyncHandler(async (req, res) => {
 
     const note = await Note.create({
         text: req.body.text,
-        // user: req.user.id
+        user: req.user.id,
         tagsArray: req.body.tagsArray
     })
 
@@ -29,7 +27,6 @@ const setNote = asyncHandler(async (req, res) => {
 
 const updateNote = asyncHandler(async (req, res) => {
     const note = await Note.findById(req.params.id)
-
     if (!note) {
         res.status(400)
         throw new Error('Заметка не найдена')

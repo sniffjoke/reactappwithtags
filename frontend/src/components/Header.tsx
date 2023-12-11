@@ -1,4 +1,4 @@
-import React, {FC, useContext, useEffect} from 'react';
+import React, {FC, useContext} from 'react';
 import {Link, NavLink, useNavigate} from "react-router-dom";
 import {SiSharp} from "react-icons/si";
 import {CiLogout} from "react-icons/ci";

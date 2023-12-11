@@ -3,7 +3,7 @@ const {Schema, model} = require("mongoose");
 const noteSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
-        // required: true,
+        required: true,
         ref: 'User'
     },
     text: {
